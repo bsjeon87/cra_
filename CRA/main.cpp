@@ -7,22 +7,26 @@
 
 using namespace std;
 
-struct Node {
-	string w;
-	string wk;
+struct WordInputInfo {
+	string word;
+	string week;
 };
 
-struct Node2 {
+struct WordDbInfo {
 	string name;
-	int point;
+	double point;
 
-	bool operator<(const Node2& other) const {
+	bool operator<(const WordDbInfo& other) const {
 		return point < other.point;
 	}
 };
 
-vector<Node2> weekBest[7]; //월 ~ 일
-vector<Node2> twoBest[2]; //평일, 주말
+const int WEEKS_NUM = 7;
+const int MAX_POINT = 2100000000;
+
+vector<WordDbInfo> dayOfWeekBest[WEEKS_NUM]; //월 ~ 일
+vector<WordDbInfo> weekdaysBest;
+vector<WordDbInfo> weekendBest; 
 int UZ = 9;
 
 map<string, int> gIndexConvert = {
@@ -58,11 +62,11 @@ int levenshtein(const std::string& a, const std::string& b) {
 
 // 점수 환산
 bool similer(const std::string& a, const std::string& b) {
-	if (a.empty() && b.empty()) return 100;
-	if (a.empty() || b.empty()) return 1;
+	if (a.empty() && b.empty()) return true;
+	if (a.empty() || b.empty()) return false;
 
 	int dist = levenshtein(a, b);
-	int max_len = std::max(a.length(), b.length());
+	int max_len = (int)std::max(a.length(), b.length());
 	// 유사도 비율 (1.0: 완전히 같음, 0.0: 전혀 다름)
 	double similarity = 1.0 - (double)dist / max_len;
 
@@ -72,121 +76,126 @@ bool similer(const std::string& a, const std::string& b) {
 	return false;
 }
 
-bool isWeekend(string weekStr) {
-	return (weekStr == "saturday" || weekStr == "sunday");
+vector<WordDbInfo>& getWeekBest(string weekStr) {
+	if (weekStr == "saturday" || weekStr == "sunday") {
+		return weekendBest;
+	}
+	return weekdaysBest;
 }
 
-string input2(string word, string weekStr) {
-	UZ++;
+void reAlginPointInfo(vector<WordDbInfo>& bestInfo) {
+	int num = 1;
 
-	int weekIndex = gIndexConvert[weekStr];
+	// 낮은 순위 키워드부터 1점. 
+	for (int idx = bestInfo.size() - 1; idx >= 0; idx--) {
+		bestInfo[idx].point = num;
+		num++;
 
-	//평일 / 주말
-	int index2 = 0;
-	if (isWeekend(weekStr))
-		index2 = 0;
-	else 
-		index2 = 1;
+	}
+}
+void reAlginPoints() {
+	UZ = 9;
 
-	int point = UZ;
+	for (int i = 0; i < WEEKS_NUM; i++) {
+		reAlginPointInfo(dayOfWeekBest[i]);
+	}
+	reAlginPointInfo(weekendBest);
+	reAlginPointInfo(weekdaysBest);
+}
+
+void processNewWord(string word, double point, vector<WordDbInfo>& dayBest, vector<WordDbInfo>& weeksBest) {
+	if (dayBest.size() < 10) {
+		dayBest.push_back({ word, point });
+	}
+
+	if (weeksBest.size() < 10) {
+		weeksBest.push_back({ word, point });
+	}
+
+	if (dayBest.size() == 10) {
+		if (dayBest.back().point < point) {
+			dayBest.pop_back();
+			dayBest.push_back({ word, point });
+		}
+	}
+
+	if (weeksBest.size() == 10) {
+		if (weeksBest.back().point < point) {
+			weeksBest.pop_back();
+			weeksBest.push_back({ word, point });
+		}
+	}
+
+	std::sort(dayBest.begin(), dayBest.end());
+	std::sort(weeksBest.begin(), weeksBest.end());
+}
+
+string corrector(WordInputInfo wordInput) {
 
 	//관리 목록에 존재하는지 확인
 	//관리되는 키워드이면 점수가 증가
+	vector<WordDbInfo>& dayBest = dayOfWeekBest[gIndexConvert[wordInput.week]];
+	vector<WordDbInfo>& weeksBest = getWeekBest(wordInput.week);
+	
+	double point = UZ + 1;
+	double perfectHitMaxPoint = 0;
 
-	long long int max1 = 0;
-	long long int max2 = 0;
+	UZ++;
 
-	int flag = 0;
-	for (Node2& node : weekBest[weekIndex]) {
-		if (node.name == word) {
-			max1 = node.point + (node.point * 0.1);
+	for (WordDbInfo& node : dayBest) {
+		if (node.name == wordInput.word) {
 			node.point += (node.point * 0.1);
-			flag = 1;
+			std::sort(dayBest.begin(), dayBest.end());
+			perfectHitMaxPoint = node.point;
 			break;
 		}
 	}
 
-	for (Node2& node : twoBest[index2]) {
-		if (node.name == word) {
-			max2 = node.point + (node.point * 0.1);
+	for (WordDbInfo& node : weeksBest) {
+		if (node.name == wordInput.word) {
 			node.point += (node.point * 0.1);
+			std::sort(weeksBest.begin(), weeksBest.end());
+			if (perfectHitMaxPoint < node.point) {
+				perfectHitMaxPoint = node.point;
+			}
 			break;
 		}
 	}
 
 	//재정렬 작업
-	if (UZ >= 2100000000 || max1 >= 2100000000 || max2 >= 2100000000) {
-		UZ = 9;
-		for (int i = 0; i < 7; i++) {
-			int num = 1;
-			for (Node2& node : weekBest[i]) {
-				node.point = num;
-				num++;
-			}
-		}
-		for (int i = 0; i < 2; i++) {
-			int num = 1;
-			for (Node2& node : twoBest[i]) {
-				node.point = num;
-				num++;
-			}
-		}
+	if (UZ >= MAX_POINT || perfectHitMaxPoint >= MAX_POINT) {
+		reAlginPoints();
 	}
 
-	if (flag == 1) {
-		return word;
+	if (perfectHitMaxPoint > 0) {
+		return wordInput.word;
 	}
-
 
 	//찰떡 HIT
-	for (Node2& node : weekBest[weekIndex]) {
-		if (similer(node.name, word)) {
+	for (WordDbInfo& node : dayBest) {
+		if (similer(node.name, wordInput.word)) {
 			return node.name;
 		}
 	}
 
-	for (Node2& node : twoBest[weekIndex]) {
-		if (similer(node.name, word)) {
+	for (WordDbInfo& node : weeksBest) {
+		if (similer(node.name, wordInput.word)) {
 			return node.name;
 		}
 	}
 
 	//완벽 HIT / 찰떡 HIT 둘다 아닌경우
-	if (weekBest[weekIndex].size() < 10) {
-		weekBest[weekIndex].push_back({ word, point });
-		std::sort(weekBest[weekIndex].begin(), weekBest[weekIndex].end());
-	}
+	processNewWord(wordInput.word, point, dayBest, weeksBest);
 
-	if (twoBest[weekIndex].size() < 10) {
-		twoBest[weekIndex].push_back({ word, point });
-		std::sort(twoBest[weekIndex].begin(), twoBest[weekIndex].end());
-	}
-
-	if (weekBest[weekIndex].size() == 10) {
-		if (weekBest[weekIndex].back().point < point) {
-			weekBest[weekIndex].pop_back();
-			weekBest[weekIndex].push_back({ word, point });
-			std::sort(weekBest[weekIndex].begin(), weekBest[weekIndex].end());
-		}
-	}
-
-	if (twoBest[weekIndex].size() == 10) {
-		if (twoBest[weekIndex].back().point < point) {
-			twoBest[weekIndex].pop_back();
-			twoBest[weekIndex].push_back({ word, point });
-			std::sort(twoBest[weekIndex].begin(), twoBest[weekIndex].end());
-		}
-	}
-
-	return word;
+	return wordInput.word;
 }
 
 void input() {
 	ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
 	for (int i = 0; i < 500; i++) {
-		string t1, t2;
-		fin >> t1 >> t2;
-		string ret = input2(t1, t2);
+		WordInputInfo wordInput;
+		fin >> wordInput.word >> wordInput.week;
+		string ret = corrector(wordInput);
 		std::cout << ret << "\n";
 	}
 }
