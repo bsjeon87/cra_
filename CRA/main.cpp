@@ -21,7 +21,7 @@ struct Node2 {
 	}
 };
 
-vector<Node2> weekBest[7]; //월 ~ 금
+vector<Node2> weekBest[7]; //월 ~ 일
 vector<Node2> twoBest[2]; //평일, 주말
 int UZ = 9;
 
@@ -72,15 +72,21 @@ bool similer(const std::string& a, const std::string& b) {
 	return false;
 }
 
-string input2(string w, string wk) {
+bool isWeekend(string weekStr) {
+	return (weekStr == "saturday" || weekStr == "sunday");
+}
+
+string input2(string word, string weekStr) {
 	UZ++;
 
-	int index = gIndexConvert[wk];
+	int weekIndex = gIndexConvert[weekStr];
 
 	//평일 / 주말
 	int index2 = 0;
-	if (index >= 0 && index <= 4) index2 = 0;
-	else index2 = 1;
+	if (isWeekend(weekStr))
+		index2 = 0;
+	else 
+		index2 = 1;
 
 	int point = UZ;
 
@@ -91,8 +97,8 @@ string input2(string w, string wk) {
 	long long int max2 = 0;
 
 	int flag = 0;
-	for (Node2& node : weekBest[index]) {
-		if (node.name == w) {
+	for (Node2& node : weekBest[weekIndex]) {
+		if (node.name == word) {
 			max1 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
 			flag = 1;
@@ -101,7 +107,7 @@ string input2(string w, string wk) {
 	}
 
 	for (Node2& node : twoBest[index2]) {
-		if (node.name == w) {
+		if (node.name == word) {
 			max2 = node.point + (node.point * 0.1);
 			node.point += (node.point * 0.1);
 			break;
@@ -128,51 +134,51 @@ string input2(string w, string wk) {
 	}
 
 	if (flag == 1) {
-		return w;
+		return word;
 	}
 
 
 	//찰떡 HIT
-	for (Node2& node : weekBest[index]) {
-		if (similer(node.name, w)) {
+	for (Node2& node : weekBest[weekIndex]) {
+		if (similer(node.name, word)) {
 			return node.name;
 		}
 	}
 
-	for (Node2& node : twoBest[index]) {
-		if (similer(node.name, w)) {
+	for (Node2& node : twoBest[weekIndex]) {
+		if (similer(node.name, word)) {
 			return node.name;
 		}
 	}
 
 	//완벽 HIT / 찰떡 HIT 둘다 아닌경우
-	if (weekBest[index].size() < 10) {
-		weekBest[index].push_back({ w, point });
-		std::sort(weekBest[index].begin(), weekBest[index].end());
+	if (weekBest[weekIndex].size() < 10) {
+		weekBest[weekIndex].push_back({ word, point });
+		std::sort(weekBest[weekIndex].begin(), weekBest[weekIndex].end());
 	}
 
-	if (twoBest[index].size() < 10) {
-		twoBest[index].push_back({ w, point });
-		std::sort(twoBest[index].begin(), twoBest[index].end());
+	if (twoBest[weekIndex].size() < 10) {
+		twoBest[weekIndex].push_back({ word, point });
+		std::sort(twoBest[weekIndex].begin(), twoBest[weekIndex].end());
 	}
 
-	if (weekBest[index].size() == 10) {
-		if (weekBest[index].back().point < point) {
-			weekBest[index].pop_back();
-			weekBest[index].push_back({ w, point });
-			std::sort(weekBest[index].begin(), weekBest[index].end());
+	if (weekBest[weekIndex].size() == 10) {
+		if (weekBest[weekIndex].back().point < point) {
+			weekBest[weekIndex].pop_back();
+			weekBest[weekIndex].push_back({ word, point });
+			std::sort(weekBest[weekIndex].begin(), weekBest[weekIndex].end());
 		}
 	}
 
-	if (twoBest[index].size() == 10) {
-		if (twoBest[index].back().point < point) {
-			twoBest[index].pop_back();
-			twoBest[index].push_back({ w, point });
-			std::sort(twoBest[index].begin(), twoBest[index].end());
+	if (twoBest[weekIndex].size() == 10) {
+		if (twoBest[weekIndex].back().point < point) {
+			twoBest[weekIndex].pop_back();
+			twoBest[weekIndex].push_back({ word, point });
+			std::sort(twoBest[weekIndex].begin(), twoBest[weekIndex].end());
 		}
 	}
 
-	return w;
+	return word;
 }
 
 void input() {
