@@ -4,6 +4,7 @@
 #include <map>
 #include <algorithm>
 #include "Corrector.h"
+#include "CorrectorException.h"
 
 void Corrector::setSimilarAlgorithm(shared_ptr<SimilarAlgorithm> similarAlgorithm) {
 	this->similarAlgorithm = similarAlgorithm;
@@ -20,7 +21,7 @@ void Corrector::reAlginPointInfo(vector<WordDbInfo>& bestInfo) {
 	int num = 1;
 
 	// 낮은 순위 키워드부터 1점. 
-	for (int idx = bestInfo.size() - 1; idx >= 0; idx--) {
+	for (int idx = (int)bestInfo.size() - 1; idx >= 0; idx--) {
 		bestInfo[idx].point = num;
 		num++;
 
@@ -103,13 +104,18 @@ bool Corrector::isInvalidInput(string week) {
 	return false;
 }
 
+void Corrector::setStartUZ(int uz) {
+	UZ = uz;
+}
+
+
 string Corrector::processCorrect(string word, string week) {
 	if (isInvalidInput(week)) {
-		return "";
+		throw CorrectorException("invalid week");
 	}
 
 	if (similarAlgorithm == nullptr) {
-		return "";
+		throw CorrectorException("Need to set Similar Algorithm");
 	}
 
 	vector<WordDbInfo>& dayBest = dayOfWeekBest[WEEK_IDX_CONVERT.at(week)];

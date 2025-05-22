@@ -47,6 +47,7 @@ class Corrector {
 public:
 	string processCorrect(string word, string week);
 	void setSimilarAlgorithm(shared_ptr<SimilarAlgorithm> similarAlgorithm);
+	void setStartUZ(int uz);
 private:
 	vector<WordDbInfo>& getWeekBest(string weekStr);
 	void reAlginPointInfo(vector<WordDbInfo>& bestInfo);

@@ -49,7 +49,10 @@
       <Filter>소스 파일\mission2</Filter>
     </ClCompile>
     <ClCompile Include="mission2\CorrectorUt.cpp">
-      <Filter>헤더 파일\mission2</Filter>
+      <Filter>소스 파일\mission2</Filter>
+    </ClCompile>
+    <ClCompile Include="mission2\CorrectorException.cpp">
+      <Filter>소스 파일\mission2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +75,9 @@
       <Filter>헤더 파일\mission2</Filter>
     </ClInclude>
     <ClInclude Include="mission2\SimilarAlgorithmFactory.h">
+      <Filter>헤더 파일\mission2</Filter>
+    </ClInclude>
+    <ClInclude Include="mission2\CorrectorException.h">
       <Filter>헤더 파일\mission2</Filter>
     </ClInclude>
   </ItemGroup>

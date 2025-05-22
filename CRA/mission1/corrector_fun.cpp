@@ -1,9 +1,12 @@
 
+#include "corrector_fun.h"
+
+#ifndef MISSION_1_CODE_DISABLE
+
 #include <string>
 #include <vector>
 #include <map>
 #include <algorithm>
-#include "corrector_fun.h"
 
 using namespace std;
 
@@ -203,3 +206,4 @@ string corrector_fun(string word, string week) {
 
 	return word;
 }
+#endif

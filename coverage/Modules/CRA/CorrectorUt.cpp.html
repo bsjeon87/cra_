@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>CorrectorUt.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include &lt;gmock/gmock.h&gt;
+#include &lt;gtest/gtest.h&gt;
+
+#include &lt;unordered_map&gt;
+#include &lt;vector&gt;
+#include &lt;memory&gt;
+#include "Corrector.h"
+#include "SimilarAlgorithmFactory.h"
+#include "LevenshteinAlgorithm.h"
+#include "CorrectorException.h"
+
+using namespace testing;
+using namespace std;
+
+class MockSimilarAlgorithm : public SimilarAlgorithm {
+public:
+<span style = "background-color:#dfd">    MOCK_METHOD(bool, similar, (const string&amp; a, const string&amp; b), (override));</span>
+};
+
+class SimilarSetAlgorithm : public SimilarAlgorithm{
+public:
+<span style = "background-color:#dfd">    SimilarSetAlgorithm(bool retVal) {
+        this-&gt;retVal = retVal;
+    }
+    virtual bool similar(const string&amp; a, const string&amp; b) {
+        return retVal;
+    }</span>
+private:
+    bool retVal;
+};
+
+
+<span style = "background-color:#dfd">TEST(SimilarAlgorithm, AlgorithDI) {
+    shared_ptr&lt;MockSimilarAlgorithm&gt; mockAlgorithm = make_shared&lt;MockSimilarAlgorithm&gt;();
+    Corrector corrector;
+    corrector.setSimilarAlgorithm(mockAlgorithm);</span>
+
+<span style = "background-color:#dfd">    EXPECT_CALL(*mockAlgorithm, similar(StrEq("a"), StrEq("b"))).Times(2)</span>
+        .WillOnce(testing::Return(false));  // one for day, one for week
+
+<span style = "background-color:#dfd">    corrector.processCorrect("a", MON_STR);
+    corrector.processCorrect("b", MON_STR);
+}</span>
+
+<span style = "background-color:#dfd">TEST(SimilarAlgorithm, AlgorithDI2) {
+    shared_ptr&lt;MockSimilarAlgorithm&gt; mockAlgorithm = make_shared&lt;MockSimilarAlgorithm&gt;();
+    Corrector corrector;
+    corrector.setSimilarAlgorithm(mockAlgorithm);</span>
+
+<span style = "background-color:#dfd">    EXPECT_CALL(*mockAlgorithm, similar(StrEq("abc"), StrEq("bb"))).Times(1)</span>
+        .WillOnce(testing::Return(true));  // one for day
+
+<span style = "background-color:#dfd">    corrector.processCorrect("abc", MON_STR);
+    EXPECT_EQ("abc", corrector.processCorrect("bb", MON_STR));
+}</span>
+
+<span style = "background-color:#dfd">TEST(SimilarAlgorithmFactory, wrongAlgorithm) {</span>
+    SimilarAlgorithmFactory similarAlgorithmFactory;
+
+<span style = "background-color:#dfd">    EXPECT_THROW(similarAlgorithmFactory.createAlgorithm("dd"), CorrectorException);
+}</span>
+
+<span style = "background-color:#dfd">TEST(Collator, wrongWeek) {
+    Corrector corrector;</span>
+    SimilarAlgorithmFactory similarAlgorithmFactory;
+
+<span style = "background-color:#dfd">    corrector.setSimilarAlgorithm(similarAlgorithmFactory.createAlgorithm("LevenshteinAlgorithm"));
+    EXPECT_THROW(corrector.processCorrect("abc", "k"), CorrectorException);
+}</span>
+
+<span style = "background-color:#dfd">TEST(Collator, weekends) {
+    shared_ptr&lt;MockSimilarAlgorithm&gt; mockAlgorithm = make_shared&lt;MockSimilarAlgorithm&gt;();
+    Corrector corrector;
+    corrector.setSimilarAlgorithm(mockAlgorithm);</span>
+
+<span style = "background-color:#dfd">    EXPECT_CALL(*mockAlgorithm, similar(StrEq("abc"), StrEq("bb"))).Times(1)</span>
+        .WillOnce(testing::Return(true));  // one for weekends
+
+<span style = "background-color:#dfd">    corrector.processCorrect("abc", SAT_STR);
+    EXPECT_EQ("abc", corrector.processCorrect("bb", SUN_STR));
+}</span>
+
+<span style = "background-color:#dfd">TEST(Collator, realignUT) {
+    shared_ptr&lt;SimilarSetAlgorithm&gt; alwaysTrue = make_shared&lt;SimilarSetAlgorithm&gt;(true);
+    Corrector corrector;
+    corrector.setSimilarAlgorithm(alwaysTrue);
+    corrector.setStartUZ(MAX_POINT - 10);</span>
+
+<span style = "background-color:#dfd">    corrector.processCorrect("abc", SAT_STR);</span>
+
+<span style = "background-color:#dfd">    for (int i = 0; i &lt; 20; i++) {</span>
+
+<span style = "background-color:#dfd">        EXPECT_NO_THROW({</span>
+            corrector.processCorrect("abcd", SAT_STR);
+         });
+<span style = "background-color:#dfd">    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(Collator, realignUT2) {
+    shared_ptr&lt;SimilarSetAlgorithm&gt; alwaysTrue = make_shared&lt;SimilarSetAlgorithm&gt;(true);
+    Corrector corrector;
+    corrector.setSimilarAlgorithm(alwaysTrue);
+    corrector.setStartUZ(MAX_POINT - 10);</span>
+
+<span style = "background-color:#dfd">    corrector.processCorrect("abc", SAT_STR);</span>
+
+<span style = "background-color:#dfd">    for (int i = 0; i &lt; 20; i++) {
+        EXPECT_NO_THROW({</span>
+            EXPECT_EQ("abc", corrector.processCorrect("abc", SAT_STR));
+            });
+<span style = "background-color:#dfd">    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(Collator, realignUT3) {
+    shared_ptr&lt;SimilarSetAlgorithm&gt; alwaysTrue = make_shared&lt;SimilarSetAlgorithm&gt;(true);
+    Corrector corrector;
+    corrector.setSimilarAlgorithm(alwaysTrue);
+    corrector.setStartUZ(MAX_POINT - 10);</span>
+
+<span style = "background-color:#dfd">    corrector.processCorrect("abc", SAT_STR);</span>
+
+<span style = "background-color:#dfd">    for (int i = 0; i &lt; 20; i++) {
+        EXPECT_NO_THROW({</span>
+            EXPECT_EQ("abc", corrector.processCorrect("abc", SUN_STR));
+            });
+<span style = "background-color:#dfd">    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(Collator, popTest) {
+    shared_ptr&lt;SimilarSetAlgorithm&gt; alwaysTrue = make_shared&lt;SimilarSetAlgorithm&gt;(false);
+    Corrector corrector;
+    corrector.setSimilarAlgorithm(alwaysTrue);</span>
+
+<span style = "background-color:#dfd">    string input = "a";</span>
+
+<span style = "background-color:#dfd">    for (int i = 0; i &lt; 11; i++) {</span>
+
+<span style = "background-color:#dfd">        EXPECT_NO_THROW({</span>
+            corrector.processCorrect(input, SUN_STR);
+            });
+<span style = "background-color:#dfd">        input += "a";
+    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(Collator, noAlgorithm) {
+    Corrector corrector;</span>
+
+<span style = "background-color:#dfd">    EXPECT_THROW(corrector.processCorrect("aa", MON_STR), CorrectorException);
+}</span>
+
+<span style = "background-color:#dfd">TEST(LevenshteinAlgorithm, ut1) {
+    LevenshteinAlgorithm algorithm;</span>
+
+<span style = "background-color:#dfd">    EXPECT_EQ(true, algorithm.similar("aa", "aa"));
+    EXPECT_EQ(false, algorithm.similar("aac", "aa"));
+    EXPECT_EQ(false, algorithm.similar("aac", "aab"));
+    EXPECT_EQ(false, algorithm.similar("", "aab"));
+    EXPECT_EQ(true, algorithm.similar("", ""));
+}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

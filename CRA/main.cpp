@@ -47,15 +47,16 @@ void test_input_using_mission2(string str) {
 int main(int argc, char* argv[]) {
 #if defined(MISSION_1)
 	test_input_using_mission1();
+	return 0;
 #elif defined (MISSION_2)
 	string similarAlgorithm = "LevenshteinAlgorithm";
 	if (argc == 2) {
 		similarAlgorithm = argv[1];
 	}
 	test_input_using_mission2(similarAlgorithm);
+	return 0;
 #elif defined(UT)
 	testing::InitGoogleMock(&argc, argv);
 	return RUN_ALL_TESTS();
 #endif
-	return 0;
 }
