@@ -126,6 +126,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mission1\corrector_fun.cpp" />
     <ClCompile Include="mission2\Corrector.cpp" />
+    <ClCompile Include="mission2\CorrectorUt.cpp" />
     <ClCompile Include="mission2\LevenshteinAlgorithm.cpp" />
     <ClCompile Include="mission2\SimilarAlgorithmFactory.cpp" />
   </ItemGroup>

@@ -1,4 +1,7 @@
 
+
+#define UT
+
 #include <fstream>
 #include <iostream>
 #include "mission1/corrector_fun.h"
@@ -7,6 +10,12 @@
 
 using namespace std;
 
+#if defined(UT)
+#include <gmock/gmock.h>
+#endif
+
+
+#if defined(MISSION_1)
 void test_input_using_mission1() {
 	ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
 
@@ -17,7 +26,7 @@ void test_input_using_mission1() {
 		std::cout << ret << "\n";
 	}
 }
-
+#elif defined(MISSION_2)
 void test_input_using_mission2(string str) {
 	ifstream fin{ "keyword_weekday_500.txt" }; //500개 데이터 입력
 
@@ -33,7 +42,8 @@ void test_input_using_mission2(string str) {
 		std::cout << ret << "\n";
 	}
 }
-#define MISSION_2
+#endif
+
 int main(int argc, char* argv[]) {
 #if defined(MISSION_1)
 	test_input_using_mission1();
@@ -43,6 +53,9 @@ int main(int argc, char* argv[]) {
 		similarAlgorithm = argv[1];
 	}
 	test_input_using_mission2(similarAlgorithm);
+#elif defined(UT)
+	testing::InitGoogleMock(&argc, argv);
+	return RUN_ALL_TESTS();
 #endif
 	return 0;
 }

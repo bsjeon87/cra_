@@ -24,15 +24,23 @@ struct CorrectorProcessResult {
 const int WEEKS_NUM = 7;
 const int MAX_POINT = 2100000000;
 const int MAX_DB_INFO_NUM = 10;
-const int SIMILARITY_THRESHOLD = 80;
+
+const string MON_STR = "monday";
+const string TUE_STR = "tuesday";
+const string WED_STR = "wednesday";
+const string THU_STR = "thursday";
+const string FRI_STR = "friday";
+const string SAT_STR = "saturday";
+const string SUN_STR = "sunday";
+
 const map<string, int> WEEK_IDX_CONVERT = {
-	{"monday", 0},
-	{"tuesday", 1},
-	{"wednesday", 2},
-	{"thursday", 3},
-	{"friday", 4},
-	{"saturday", 5},
-	{"sunday", 6},
+	{MON_STR, 0},
+	{TUE_STR, 1},
+	{WED_STR, 2},
+	{THU_STR, 3},
+	{FRI_STR, 4},
+	{SAT_STR, 5},
+	{SUN_STR, 6},
 };
 
 class Corrector {
@@ -40,7 +48,6 @@ public:
 	string processCorrect(string word, string week);
 	void setSimilarAlgorithm(shared_ptr<SimilarAlgorithm> similarAlgorithm);
 private:
-	bool similer(const std::string& a, const std::string& b);
 	vector<WordDbInfo>& getWeekBest(string weekStr);
 	void reAlginPointInfo(vector<WordDbInfo>& bestInfo);
 	void reAlginPoints();

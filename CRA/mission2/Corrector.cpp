@@ -9,22 +9,6 @@ void Corrector::setSimilarAlgorithm(shared_ptr<SimilarAlgorithm> similarAlgorith
 	this->similarAlgorithm = similarAlgorithm;
 }
 
-// 점수 환산
-bool Corrector::similer(const std::string& a, const std::string& b) {
-	if (a.empty() && b.empty()) return true;
-	if (a.empty() || b.empty()) return false;
-
-	int dist = similarAlgorithm->getSimilar(a, b);
-	int max_len = (int)std::max(a.length(), b.length());
-	// 유사도 비율 (1.0: 완전히 같음, 0.0: 전혀 다름)
-	double similarity = 1.0 - (double)dist / max_len;
-
-	int score = 1 + static_cast<int>(similarity * 99);
-
-	if (score >= SIMILARITY_THRESHOLD) return true;
-	return false;
-}
-
 vector<WordDbInfo>& Corrector::getWeekBest(string weekStr) {
 	if (weekStr == "saturday" || weekStr == "sunday") {
 		return weekendBest;
@@ -85,13 +69,13 @@ double Corrector::processFullmatchedPoints(string word, vector<WordDbInfo>& dayB
 
 CorrectorProcessResult Corrector::processCorrector(string word, vector<WordDbInfo>& dayBest, vector<WordDbInfo>& weeksBest) {
 	for (WordDbInfo& node : dayBest) {
-		if (similer(node.name, word)) {
+		if (similarAlgorithm->similar(node.name, word)) {
 			return { true, node.name };
 		}
 	}
 
 	for (WordDbInfo& node : weeksBest) {
-		if (similer(node.name, word)) {
+		if (similarAlgorithm->similar(node.name, word)) {
 			return { true, node.name };
 		}
 	}
