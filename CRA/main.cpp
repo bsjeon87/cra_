@@ -117,7 +117,7 @@ string input2(string word, string weekStr) {
 	//재정렬 작업
 	if (UZ >= 2100000000 || max1 >= 2100000000 || max2 >= 2100000000) {
 		UZ = 9;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 7; i++) {
 			int num = 1;
 			for (Node2& node : weekBest[i]) {
 				node.point = num;
