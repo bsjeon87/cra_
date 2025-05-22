@@ -4,7 +4,7 @@
 
 class LevenshteinAlgorithm : public SimilarAlgorithm {
 public:
-	virtual bool similar(const std::string& a, const std::string& b);
+	virtual bool similar(const std::string& inputStr1, const std::string& inputStr2);
 private:
-	int levenshteinAlgorithm(const std::string& a, const std::string& b);
+	int levenshteinAlgorithm(const std::string& inputStr1, const std::string& inputStr2);
 };

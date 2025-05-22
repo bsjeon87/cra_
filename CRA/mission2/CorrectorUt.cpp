@@ -14,7 +14,7 @@ using namespace std;
 
 class MockSimilarAlgorithm : public SimilarAlgorithm {
 public:
-    MOCK_METHOD(bool, similar, (const string& a, const string& b), (override));
+    MOCK_METHOD(bool, similar, (const std::string& inputStr1, const std::string& inputStr2), (override));
 };
 
 class SimilarSetAlgorithm : public SimilarAlgorithm{
@@ -22,13 +22,12 @@ public:
     SimilarSetAlgorithm(bool retVal) {
         this->retVal = retVal;
     }
-    virtual bool similar(const string& a, const string& b) {
+    virtual bool similar(const std::string& inputStr1, const std::string& inputStr2) {
         return retVal;
     }
 private:
     bool retVal;
 };
-
 
 TEST(SimilarAlgorithm, AlgorithDI) {
     shared_ptr<MockSimilarAlgorithm> mockAlgorithm = make_shared<MockSimilarAlgorithm>();

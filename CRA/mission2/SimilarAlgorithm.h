@@ -5,5 +5,5 @@ using namespace std;
 
 class SimilarAlgorithm {
 public:
-	virtual bool similar(const std::string& a, const std::string& b) = 0;
+	virtual bool similar(const std::string& inputStr1, const std::string& inputStr2) = 0;
 };

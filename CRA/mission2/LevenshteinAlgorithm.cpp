@@ -4,32 +4,32 @@
 const int SIMILARITY_THRESHOLD = 80;
 
 // 레벤슈타인 거리 계산 알고리즘 (문자열 유사도 검사)
-int LevenshteinAlgorithm::levenshteinAlgorithm(const std::string& a, const std::string& b) {
-	const size_t len_a = (int)a.size();
-	const size_t len_b = (int)b.size();
+int LevenshteinAlgorithm::levenshteinAlgorithm(const std::string& inputStr1, const std::string& inputStr2) {
+	const size_t len_inputStr1 = (int)inputStr1.size();
+	const size_t len_inputStr2 = (int)inputStr2.size();
 
-	std::vector<std::vector<int>> d(len_a + 1, std::vector<int>(len_b + 1));
+	std::vector<std::vector<int>> distVec(len_inputStr1 + 1, std::vector<int>(len_inputStr2 + 1));
 
-	for (int i = 0; i <= len_a; ++i) d[i][0] = i;
-	for (int j = 0; j <= len_b; ++j) d[0][j] = j;
+	for (int i = 0; i <= len_inputStr1; ++i) distVec[i][0] = i;
+	for (int j = 0; j <= len_inputStr2; ++j) distVec[0][j] = j;
 
-	for (int i = 1; i <= len_a; ++i) {
-		for (int j = 1; j <= len_b; ++j) {
-			if (a[i - 1] == b[j - 1])
-				d[i][j] = d[i - 1][j - 1];
+	for (int i = 1; i <= len_inputStr1; ++i) {
+		for (int j = 1; j <= len_inputStr2; ++j) {
+			if (inputStr1[i - 1] == inputStr2[j - 1])
+				distVec[i][j] = distVec[i - 1][j - 1];
 			else
-				d[i][j] = 1 + std::min({ d[i - 1][j], d[i][j - 1], d[i - 1][j - 1] });
+				distVec[i][j] = 1 + std::min({ distVec[i - 1][j], distVec[i][j - 1], distVec[i - 1][j - 1] });
 		}
 	}
-	return d[len_a][len_b];
+	return distVec[len_inputStr1][len_inputStr2];
 }
 
-bool LevenshteinAlgorithm::similar(const std::string& a, const std::string& b) {
-	if (a.empty() && b.empty()) return true;
-	if (a.empty() || b.empty()) return false;
+bool LevenshteinAlgorithm::similar(const std::string& inputStr1, const std::string& inputStr2) {
+	if (inputStr1.empty() && inputStr2.empty()) return true;
+	if (inputStr1.empty() || inputStr2.empty()) return false;
 
-	int dist = levenshteinAlgorithm(a, b);
-	int max_len = (int)std::max(a.length(), b.length());
+	int dist = levenshteinAlgorithm(inputStr1, inputStr2);
+	int max_len = (int)std::max(inputStr1.length(), inputStr2.length());
 	// 유사도 비율 (1.0: 완전히 같음, 0.0: 전혀 다름)
 	double similarity = 1.0 - (double)dist / max_len;
 
