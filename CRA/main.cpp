@@ -25,6 +25,16 @@ vector<Node2> weekBest[7]; //월 ~ 금
 vector<Node2> twoBest[2]; //평일, 주말
 int UZ = 9;
 
+map<string, int> gIndexConvert = {
+	{"monday", 0},
+	{"tuesday", 1},
+	{"wednesday", 2},
+	{"thursday", 3},
+	{"friday", 4},
+	{"saturday", 5},
+	{"sunday", 6},
+};
+
 // 레벤슈타인 거리 계산 알고리즘 (문자열 유사도 검사)
 int levenshtein(const std::string& a, const std::string& b) {
 	const size_t len_a = a.size();
@@ -65,14 +75,7 @@ bool similer(const std::string& a, const std::string& b) {
 string input2(string w, string wk) {
 	UZ++;
 
-	int index = 0;
-	if (wk == "monday") index = 0;
-	if (wk == "tuesday") index = 1;
-	if (wk == "wednesday") index = 2;
-	if (wk == "thursday") index = 3;
-	if (wk == "friday") index = 4;
-	if (wk == "saturday") index = 5;
-	if (wk == "sunday") index = 6;
+	int index = gIndexConvert[wk];
 
 	//평일 / 주말
 	int index2 = 0;

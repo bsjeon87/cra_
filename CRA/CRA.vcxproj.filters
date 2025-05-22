@@ -22,4 +22,7 @@
   <ItemGroup>
     <Text Include="keyword_weekday_500.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
