@@ -42,6 +42,12 @@
     <ClCompile Include="mission1\corrector_fun.cpp">
       <Filter>소스 파일\mission1</Filter>
     </ClCompile>
+    <ClCompile Include="mission2\LevenshteinAlgorithm.cpp">
+      <Filter>소스 파일\mission2</Filter>
+    </ClCompile>
+    <ClCompile Include="mission2\SimilarAlgorithmFactory.cpp">
+      <Filter>소스 파일\mission2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="keyword_weekday_500.txt" />
@@ -54,6 +60,15 @@
       <Filter>헤더 파일\mission1</Filter>
     </ClInclude>
     <ClInclude Include="mission2\Corrector.h">
+      <Filter>헤더 파일\mission2</Filter>
+    </ClInclude>
+    <ClInclude Include="mission2\LevenshteinAlgorithm.h">
+      <Filter>헤더 파일\mission2</Filter>
+    </ClInclude>
+    <ClInclude Include="mission2\SimilarAlgorithm.h">
+      <Filter>헤더 파일\mission2</Filter>
+    </ClInclude>
+    <ClInclude Include="mission2\SimilarAlgorithmFactory.h">
       <Filter>헤더 파일\mission2</Filter>
     </ClInclude>
   </ItemGroup>

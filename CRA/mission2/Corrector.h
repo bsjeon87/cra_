@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
+#include "SimilarAlgorithm.h"
 
 using namespace std;
 
@@ -36,8 +38,8 @@ const map<string, int> WEEK_IDX_CONVERT = {
 class Corrector {
 public:
 	string processCorrect(string word, string week);
+	void setSimilarAlgorithm(shared_ptr<SimilarAlgorithm> similarAlgorithm);
 private:
-	int levenshtein(const std::string& a, const std::string& b);
 	bool similer(const std::string& a, const std::string& b);
 	vector<WordDbInfo>& getWeekBest(string weekStr);
 	void reAlginPointInfo(vector<WordDbInfo>& bestInfo);
@@ -51,4 +53,6 @@ private:
 	vector<WordDbInfo> weekdaysBest;
 	vector<WordDbInfo> weekendBest;
 	int UZ;
+
+	shared_ptr<SimilarAlgorithm> similarAlgorithm;
 };
