@@ -166,7 +166,7 @@ void processNewWord(string word, double point, vector<WordDbInfo>& dayBest, vect
 }
 
 bool isInvalidInput(WordInputInfo input) {
-	if (WEEK_IDX_CONVERT.find(input.word) == WEEK_IDX_CONVERT.end()) {
+	if (WEEK_IDX_CONVERT.find(input.week) == WEEK_IDX_CONVERT.end()) {
 		return true;
 	}
 	return false;
