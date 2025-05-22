@@ -7,5 +7,4 @@ shared_ptr<SimilarAlgorithm> SimilarAlgorithmFactory::createAlgorithm(string alg
 		return make_shared<LevenshteinAlgorithm>();
 	}
 
-	throw CorrectorException("invalid algorithm name");
-}
+	throw CorrectorException("invalid algorithm name");}

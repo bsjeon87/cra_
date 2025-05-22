@@ -81,8 +81,8 @@ CorrectorProcessResult Corrector::processCorrector(string word, vector<WordDbInf
 		}
 	}
 
-	return { false, "" };
-}
+	return { false, "" };}
+
 void Corrector::processNewWord(string word, double point, vector<WordDbInfo>& dayBest, vector<WordDbInfo>& weeksBest) {
 	dayBest.push_back({ word, point });
 	std::sort(dayBest.begin(), dayBest.end());
