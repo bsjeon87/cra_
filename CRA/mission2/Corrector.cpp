@@ -108,7 +108,6 @@ void Corrector::setStartUZ(int uz) {
 	UZ = uz;
 }
 
-
 string Corrector::processCorrect(string word, string week) {
 	if (isInvalidInput(week)) {
 		throw CorrectorException("invalid week");

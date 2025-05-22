@@ -15,32 +15,32 @@
 const int SIMILARITY_THRESHOLD = 80;
 
 // ·¹º¥½´Å¸ÀÎ °Å¸® °è»ê ¾Ë°í¸®Áò (¹®ÀÚ¿­ À¯»çµµ °Ë»ç)
-<span style = "background-color:#dfd">int LevenshteinAlgorithm::levenshteinAlgorithm(const std::string&amp; a, const std::string&amp; b) {
-	const size_t len_a = (int)a.size();
-	const size_t len_b = (int)b.size();</span>
+<span style = "background-color:#dfd">int LevenshteinAlgorithm::levenshteinAlgorithm(const std::string&amp; inputStr1, const std::string&amp; inputStr2) {
+	const size_t len_inputStr1 = (int)inputStr1.size();
+	const size_t len_inputStr2 = (int)inputStr2.size();</span>
 
-<span style = "background-color:#dfd">	std::vector&lt;std::vector&lt;int&gt;&gt; d(len_a + 1, std::vector&lt;int&gt;(len_b + 1));</span>
+<span style = "background-color:#dfd">	std::vector&lt;std::vector&lt;int&gt;&gt; distVec(len_inputStr1 + 1, std::vector&lt;int&gt;(len_inputStr2 + 1));</span>
 
-<span style = "background-color:#dfd">	for (int i = 0; i &lt;= len_a; ++i) d[i][0] = i;
-	for (int j = 0; j &lt;= len_b; ++j) d[0][j] = j;</span>
+<span style = "background-color:#dfd">	for (int i = 0; i &lt;= len_inputStr1; ++i) distVec[i][0] = i;
+	for (int j = 0; j &lt;= len_inputStr2; ++j) distVec[0][j] = j;</span>
 
-<span style = "background-color:#dfd">	for (int i = 1; i &lt;= len_a; ++i) {
-		for (int j = 1; j &lt;= len_b; ++j) {
-			if (a[i - 1] == b[j - 1])
-				d[i][j] = d[i - 1][j - 1];</span>
+<span style = "background-color:#dfd">	for (int i = 1; i &lt;= len_inputStr1; ++i) {
+		for (int j = 1; j &lt;= len_inputStr2; ++j) {
+			if (inputStr1[i - 1] == inputStr2[j - 1])
+				distVec[i][j] = distVec[i - 1][j - 1];</span>
 			else
-<span style = "background-color:#dfd">				d[i][j] = 1 + std::min({ d[i - 1][j], d[i][j - 1], d[i - 1][j - 1] });
+<span style = "background-color:#dfd">				distVec[i][j] = 1 + std::min({ distVec[i - 1][j], distVec[i][j - 1], distVec[i - 1][j - 1] });
 		}
 	}
-	return d[len_a][len_b];
+	return distVec[len_inputStr1][len_inputStr2];
 }</span>
 
-<span style = "background-color:#dfd">bool LevenshteinAlgorithm::similar(const std::string&amp; a, const std::string&amp; b) {
-	if (a.empty() &amp;&amp; b.empty()) return true;
-	if (a.empty() || b.empty()) return false;</span>
+<span style = "background-color:#dfd">bool LevenshteinAlgorithm::similar(const std::string&amp; inputStr1, const std::string&amp; inputStr2) {
+	if (inputStr1.empty() &amp;&amp; inputStr2.empty()) return true;
+	if (inputStr1.empty() || inputStr2.empty()) return false;</span>
 
-<span style = "background-color:#dfd">	int dist = levenshteinAlgorithm(a, b);
-	int max_len = (int)std::max(a.length(), b.length());</span>
+<span style = "background-color:#dfd">	int dist = levenshteinAlgorithm(inputStr1, inputStr2);
+	int max_len = (int)std::max(inputStr1.length(), inputStr2.length());</span>
 	// À¯»çµµ ºñÀ² (1.0: ¿ÏÀüÈ÷ °°À½, 0.0: ÀüÇô ´Ù¸§)
 <span style = "background-color:#dfd">	double similarity = 1.0 - (double)dist / max_len;</span>
 
