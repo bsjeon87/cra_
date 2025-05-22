@@ -13,13 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\mission1">
+      <UniqueIdentifier>{744c639a-4157-4ccc-b114-e3157b72d762}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\mission2">
+      <UniqueIdentifier>{a7e9e1db-426d-40ae-a997-de882b53846b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\mission1">
+      <UniqueIdentifier>{e2e9f928-4a7b-4e24-9c18-e595497c4741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\mission2">
+      <UniqueIdentifier>{2c82272e-2359-4849-adc7-c77fc0104dc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="mission1\corrector_fun.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="mission2\Corrector.cpp">
+      <Filter>소스 파일\mission2</Filter>
+    </ClCompile>
+    <ClCompile Include="mission1\corrector_fun.cpp">
+      <Filter>소스 파일\mission1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -30,7 +51,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mission1\corrector_fun.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\mission1</Filter>
+    </ClInclude>
+    <ClInclude Include="mission2\Corrector.h">
+      <Filter>헤더 파일\mission2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

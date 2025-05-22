@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mission1\corrector_fun.cpp" />
+    <ClCompile Include="mission2\Corrector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="keyword_weekday_500.txt" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mission1\corrector_fun.h" />
+    <ClInclude Include="mission2\Corrector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

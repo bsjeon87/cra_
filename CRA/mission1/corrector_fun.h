@@ -4,9 +4,4 @@
 
 using namespace std;
 
-struct WordInputInfo {
-	string word;
-	string week;
-};
-
-string corrector_fun(WordInputInfo wordInput);
+string corrector_fun(string word, string week);
